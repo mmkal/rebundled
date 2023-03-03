@@ -4,8 +4,9 @@
       "es2017",
       "DOM"
     ],
+    "resolveJsonModule": true,
     "target": "es2017",
-    "module": "commonjs",
+    "module": "Node16",
     "strict": true,
     "noEmit": true,
     "noErrorTruncation": true,
@@ -17,5 +18,8 @@
     "*.js",
     ".*.*js",
     "*.md"
-  ]
+  ],
+  "ts-node": {
+    "transpileOnly": true
+  }
 }
