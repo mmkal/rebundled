@@ -2,7 +2,7 @@
   "name": "rebundled",
   "version": "0.0.0",
   "scripts": {
-    "rebundle": "ts-node src/index",
+    "rebundle": "npm_config_registry=https://registry.npmjs.org ts-node src/index",
     "eslint": "eslint --ext '.ts,.js,.md'",
     "lint": "tsc && eslint .",
     "build": "tsc -p tsconfig.lib.json",

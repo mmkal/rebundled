@@ -20,6 +20,7 @@ const execSyncStorage = new AsyncLocalStorage<childProcess.ExecSyncOptions>()
 
 const exec = (command: string) => {
     const store = execSyncStorage.getStore()
+    log(`Running`, command)
     childProcess.execSync(command, store)
 }
 
@@ -96,7 +97,7 @@ const configs: RebundleConfig[] = [
     {
         package: 'truncate-json',
         scripts: {
-            install: () => exec('npm whoami && npm install'),
+            install: () => exec('npm install'),
             modify: ({packageJson, readmePath}) => {
                 delete packageJson.exports
                 preparePackageForMicrobundle('src/main.js', packageJson)
@@ -138,6 +139,7 @@ export const rebundle = async (config: RebundleConfig) => {
             await script('bundle')
             if (args['--dry-run']) {
                 log(`Dry run: skipping publish`)
+                exec('npm whoami')
             } else {
                 await script('publish', `${gitPackage.name}@${gitPackage.version}`)
             }
