@@ -4,6 +4,15 @@ import * as childProcess from 'child_process'
 import * as fs from 'fs'
 import * as path from 'path'
 import {AsyncLocalStorage} from 'async_hooks'
+import arg from 'arg'
+import * as semver from 'semver'
+
+const args = arg({
+    '--prerelease': String,
+    '--version': String,
+    '--dry-run': Boolean,
+    '--skip-cleanup': Boolean,
+})
 
 type Rebundlable = keyof typeof rebundledPackageJson['dependencies']
 
@@ -14,7 +23,12 @@ const exec = (command: string) => {
     childProcess.execSync(command, store)
 }
 
-type Script = (packageJson: typefest.PackageJson) => typefest.Promisable<void>
+const logStorage = new AsyncLocalStorage<unknown[]>()
+const log = (...args: unknown[]) => {
+    console.log(...logStorage.getStore() || [], ...args)
+}
+
+type Script = (params: {packageJson: typefest.PackageJson; readmePath?: string}) => typefest.Promisable<void>
 
 type RebundleConfig = {
     package: Rebundlable
@@ -37,6 +51,20 @@ const defaultGetRepo = (packageJson: typefest.PackageJson): string => {
     return `${githubBaseUrl}${packageJson.repository}`.replace(githubBaseUrl + githubBaseUrl, githubBaseUrl)
 }
 
+export const updateFile = (filepath: string, update: (old: string) => string) => {
+    const old = fs.readFileSync(filepath).toString()
+    const updated = update(old)
+    fs.writeFileSync(filepath, updated)
+}
+
+export const updateReadme: Script = ({packageJson, readmePath}) => {
+    if (!readmePath) return
+    updateFile(readmePath, old => [
+        `⚠️⚠️ **This is a [rebundled](https://github.com/mmkal/rebundled) version of ${packageJson.name}**! ⚠️⚠️`,
+        old,
+    ].join('\n\n'))
+}
+
 export const preparePackageForMicrobundle = (sourceEntryPoint: string, packageJson: typefest.PackageJson): void => {
     packageJson.name = `@rebundled/${packageJson.name!.split('/').slice(-1)[0]}`
     packageJson.type = 'module'
@@ -56,6 +84,12 @@ export const preparePackageForMicrobundle = (sourceEntryPoint: string, packageJs
         packageJson.types = 'dist/main.d.ts'
     }
     packageJson.files = ['dist']
+    let version = args['--version'] || packageJson.version
+    if (args['--prerelease']) {
+        version = semver.inc(version!, 'prerelease', args['--prerelease'])!
+        log(`New prerelease '${args['--prerelease']}' version:`, version)
+    }
+    packageJson.version = version!
 }
 
 const configs: RebundleConfig[] = [
@@ -63,15 +97,15 @@ const configs: RebundleConfig[] = [
         package: 'truncate-json',
         scripts: {
             install: () => exec('npm install'),
-            modify: packageJson => {
+            modify: ({packageJson, readmePath}) => {
                 delete packageJson.exports
                 preparePackageForMicrobundle('src/main.js', packageJson)
                 packageJson.types = 'src/main.d.ts'
                 packageJson.files?.push('src/main.d.ts')
-                
+                updateReadme({packageJson, readmePath})
             },
-            bundle: () =>  exec(`microbundle --target node --generateTypes false --external none`),
-            publish: () => exec('echo npm publish'),
+            bundle: () => exec(`microbundle --target node --generateTypes false --external none`),
+            publish: () => exec('npm publish --access=public'),
         }
     },
 ]
@@ -79,33 +113,56 @@ const configs: RebundleConfig[] = [
 export const rebundle = async (config: RebundleConfig) => {
     const {temporaryDirectory} = await import('tempy')
     const tempDir = temporaryDirectory()
-    await execSyncStorage.run({cwd: tempDir, stdio: 'inherit'}, async () => {
+    const doit = async () => {
         const readPackageJson = (filepath: string) => JSON.parse(fs.readFileSync(filepath).toString()) as typefest.PackageJson
         const nodeModulesPackage = readPackageJson(path.join('node_modules', config.package, 'package.json'))
         const getRepo = config.repo || defaultGetRepo
         const gitRepo = getRepo(nodeModulesPackage)
-        console.log(`Cloning ${config.package} into ${tempDir}. Git repo: ${gitRepo}`)
+
+        log(`Cloning into ${tempDir}. Git repo: ${gitRepo}`)
         exec(`git clone ${gitRepo}`)
-        const folder = fs.readdirSync(tempDir)[0]
-        await execSyncStorage.run({cwd: path.join(tempDir, folder), stdio: 'inherit'}, async () => {
-            const packageJsonPath = path.join(tempDir, folder, 'package.json')
+        const repoFolderName = fs.readdirSync(tempDir)[0]
+        const repoDir = path.join(tempDir, repoFolderName)
+        await execSyncStorage.run({cwd: repoDir, stdio: 'inherit'}, async () => {
+            const packageJsonPath = path.join(tempDir, repoFolderName, 'package.json')
             const gitPackage = readPackageJson(packageJsonPath)
-            const script = async (name: keyof RebundleConfig['scripts']) => {
-                console.log(`Running ${name}`)
-                await config.scripts[name](gitPackage)
+            const readmeFilename = fs.readdirSync(repoDir).find(filename => filename.toLowerCase() === 'readme.md')
+            const readmePath = readmeFilename && path.join(repoDir, readmeFilename)
+            const script = async (name: keyof RebundleConfig['scripts'], ...logArgs: unknown[]) => {
+                log(`running ${name}`, ...logArgs)
+                await config.scripts[name]({packageJson: gitPackage, readmePath})
             }
             await script('modify')
             await script('install')
             fs.writeFileSync(packageJsonPath, JSON.stringify(gitPackage, null, 2))
             await script('bundle')
-            await script('publish')
+            if (args['--dry-run']) {
+                log(`Dry run: skipping publish`)
+            } else {
+                await script('publish', `${gitPackage.name}@${gitPackage.version}`)
+            }
         })
-    })
+    }
+    try {
+        await logStorage.run([`package ${config.package}:`], async () => {
+            await execSyncStorage.run({cwd: tempDir, stdio: 'inherit'}, doit)
+        })
+    }
+    finally {
+        if (args['--skip-cleanup']) {
+            log(`Skipping cleanup of ${tempDir}`)
+        } else {
+            log(`Cleaning ${tempDir}`)
+            exec(`rm -rf ${tempDir}`)
+        }
+    }
 }
 
 const run = async () => {
     for (const config of configs) {
-        await rebundle(config)
+        await logStorage.run([`package ${config.package}:`], async () => {
+            await rebundle(config)
+        })
     }
 }
 
