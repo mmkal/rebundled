@@ -1,0 +1,29 @@
+{
+  "name": "rebundled",
+  "version": "0.0.0",
+  "scripts": {
+    "copy-config": "node dist/bin --repo mmkal/eslint-plugin-codegen",
+    "eslint": "eslint --ext '.ts,.js,.md'",
+    "lint": "tsc && eslint .",
+    "build": "tsc -p tsconfig.lib.json",
+    "test": "jest"
+  },
+  "files": [
+    "dist",
+    "*.md"
+  ],
+  "author": "",
+  "np": {
+    "cleanup": false
+  },
+  "devDependencies": {
+    "typescript": "4.9.5",
+    "np": "7.6.3",
+    "@types/jest": "29.4.0",
+    "jest": "28.1.3",
+    "ts-jest": "28.0.8",
+    "@types/eslint": "8.21.1",
+    "eslint": "8.35.0",
+    "eslint-plugin-mmkal": "0.0.1-2"
+  }
+}
