@@ -96,7 +96,7 @@ const configs: RebundleConfig[] = [
     {
         package: 'truncate-json',
         scripts: {
-            install: () => exec('npm install'),
+            install: () => exec('npm whoami && npm install'),
             modify: ({packageJson, readmePath}) => {
                 delete packageJson.exports
                 preparePackageForMicrobundle('src/main.js', packageJson)
