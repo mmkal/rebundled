@@ -9,7 +9,6 @@ module.exports = {
       files: ['*.md'],
       rules: {
         'mmkal/unicorn/filename-case': 'off',
-        'mmkal/prettier/prettier': 'off',
       },
     },
   ],
