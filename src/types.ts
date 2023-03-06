@@ -2,7 +2,11 @@ import type * as typefest from 'type-fest'
 import type rebundledPackageJson from '../package.json'
 
 type Rebundlable = keyof (typeof rebundledPackageJson)['dependencies']
-export type Script = (params: {packageJson: typefest.PackageJson; readmePath?: string}) => typefest.Promisable<void>
+type ScriptOutput = void | string | Buffer // `execSync` returns string | Buffer
+export type Script = (params: {
+  packageJson: typefest.PackageJson
+  readmePath?: string
+}) => typefest.Promisable<ScriptOutput>
 
 export type RebundleConfig = {
   package: Rebundlable
