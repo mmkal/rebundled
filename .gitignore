@@ -2,6 +2,7 @@ node_modules
 dist
 *ignoreme*
 coverage
+generated/
 
 # ignore non-pnpm lockfiles
 yarn.lock
