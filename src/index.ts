@@ -23,13 +23,18 @@ export const rebundle = async (config: RebundleConfig) => {
     const repoFolderName = fs.readdirSync(parentDir)[0]
     const repoDir = path.join(parentDir, repoFolderName)
     await execSyncStorage.run({cwd: repoDir, stdio: 'inherit'}, async () => {
-      const packageJsonPath = path.join(parentDir, repoFolderName, 'package.json')
+      const projectPath = path.join(parentDir, repoFolderName)
+      const packageJsonPath = path.join(projectPath, 'package.json')
       const gitPackage = readPackageJson(packageJsonPath)
       const readmeFilename = fs.readdirSync(repoDir).find(filename => filename.toLowerCase() === 'readme.md')
       const readmePath = readmeFilename && path.join(repoDir, readmeFilename)
       const script = async (name: keyof RebundleConfig['scripts'], ...logArgs: unknown[]) => {
         log(`running ${name}`, ...logArgs)
-        await config.scripts[name]({packageJson: gitPackage, readmePath})
+        await config.scripts[name]({
+          packageJson: gitPackage,
+          projectPath,
+          readmePath,
+        })
       }
 
       await script('modify')

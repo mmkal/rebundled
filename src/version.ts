@@ -10,7 +10,7 @@ export function getVersion(packageJson: typefest.PackageJson) {
     let json = exec(`npm view ${packageJson.name} versions --json`, {stdio: undefined}).toString().trim()
     if (!json.startsWith('[')) json = `[${json}]` // weird npm view bug
     const list = JSON.parse(json) as string[]
-    const [latest] = list.sort(semver.compare)
+    const [latest] = list.sort(semver.compare).slice(-1)
     const prerelease = semver.prerelease(latest)
     log(`Found published version`, latest)
     version = prerelease ? semver.inc(latest, 'prerelease') : semver.inc(latest, 'patch')

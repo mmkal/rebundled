@@ -5,6 +5,7 @@ type Rebundlable = keyof (typeof rebundledPackageJson)['dependencies']
 type ScriptOutput = void | string | Buffer // `execSync` returns string | Buffer
 export type Script = (params: {
   packageJson: typefest.PackageJson
+  projectPath: string
   readmePath?: string
 }) => typefest.Promisable<ScriptOutput>
 

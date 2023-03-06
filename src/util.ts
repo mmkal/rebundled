@@ -21,9 +21,7 @@ export const log = (...args: unknown[]) => {
 
 export const defaultGetRepo = (packageJson: typefest.PackageJson): string => {
   const githubBaseUrl = 'https://github.com/'
-  const repository = typeof packageJson.repository === 'string' 
-    ? packageJson.repository
-    : packageJson.repository?.url
+  const repository = typeof packageJson.repository === 'string' ? packageJson.repository : packageJson.repository?.url
   return `${githubBaseUrl}${repository}`.replace(githubBaseUrl + githubBaseUrl, githubBaseUrl)
 }
 
@@ -33,11 +31,15 @@ export const updateFile = (filepath: string, update: (old: string) => string) =>
   fs.writeFileSync(filepath, updated)
 }
 
-export const updateReadme: Script = ({packageJson, readmePath}) => {
+export const updateReadme = (
+  {packageJson, readmePath}: Pick<Parameters<Script>[0], 'packageJson' | 'readmePath'>,
+  ...additionalDocs: string[]
+) => {
   if (!readmePath) return
   updateFile(readmePath, old =>
     [
       `⚠️⚠️ **This is a [rebundled](https://github.com/mmkal/rebundled) version of ${packageJson.name}**! ⚠️⚠️`,
+      ...additionalDocs,
       old,
     ].join('\n\n'),
   )
