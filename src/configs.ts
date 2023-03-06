@@ -7,16 +7,20 @@ export const configs: RebundleConfig[] = [
     scripts: {
       install: () => exec('npm install --ignore-scripts --production'),
       async modify({packageJson, update}) {
-        delete packageJson.exports
         preparePackageForMicrobundle(packageJson, {
           source: './src/main.js',
-          exports: ['require', 'default'],
+          type: 'module',
+          exports: {
+            require: './dist/main.cjs',
+            import: './dist/main.modern.js',
+          },
+          main: './dist/main.cjs',
+          module: './dist/main.module.js',
+          types: './src/main.d.ts',
+          files: ['dist', 'src/main.d.ts'],
+          unpkg: './dist/main.umd.js',
         })
-        packageJson.types = './src/main.d.ts'
-        packageJson.files?.push('./src/main.d.ts')
-        await update({pattern: './readme.md', globOptions: {nocase: true}}, old =>
-          [rebundledNote(packageJson), old].join('\n\n'),
-        )
+        await update({pattern: './README.md'}, old => [rebundledNote(packageJson), old].join('\n\n'))
       },
       bundle: () => exec(`microbundle --target node --generateTypes false --external none`),
       publish: () => exec('npm publish --access=public'),
@@ -27,17 +31,24 @@ export const configs: RebundleConfig[] = [
     scripts: {
       install: () => exec('npm install --ignore-scripts'),
       async modify({packageJson, update}) {
-        delete packageJson.exports
         preparePackageForMicrobundle(packageJson, {
-          source: 'index.ts',
-          exports: ['require', 'named'],
+          source: './index.ts',
+          type: 'module',
+          exports: {
+            require: './dist/main.cjs',
+            import: './dist/main.modern.js',
+          },
+          main: './dist/main.cjs',
+          module: './dist/main.module.js',
+          types: './dist/index.d.ts',
+          files: ['dist', 'src/main.d.ts'],
+          unpkg: './dist/main.umd.js',
         })
-        packageJson.types = './dist/index.d.ts'
-        packageJson.scripts = {}
+        packageJson.scripts = {} // prevent weird side effects on prepublish etc.
         await update({pattern: './index.ts'}, old =>
           old.replace('export default function pMemoize', 'export function pMemoize'),
         )
-        await update({pattern: './readme.md', globOptions: {nocase: true}}, old =>
+        await update({pattern: './readme.md'}, old =>
           [
             rebundledNote(packageJson),
             "**Note**: the default import has been replaced with a named import, so you must use `import {pMemoize} from '@rebundled/p-memoize'` instead of `import pMemoize from 'p-memoize'`.",

@@ -28,3 +28,14 @@ export type RebundleConfig = {
     publish: Script
   }
 }
+
+/** A type derived from `PackageJson` where everything that `microbundle` cares about is required. Any un-needed values must be explicitly set to `null` */
+export type MicrobundlePackageJsonProps = {
+  source: string
+  typings?: never
+} & {
+  [K in keyof Pick<
+    typefest.PackageJson,
+    'type' | 'main' | 'module' | 'exports' | 'types' | 'unpkg' | 'files'
+  >]-?: typefest.PackageJson[K]
+}

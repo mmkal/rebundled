@@ -1,3 +1,4 @@
+import * as assert from 'assert'
 import * as fs from 'fs'
 import {glob} from 'glob'
 import * as path from 'path'
@@ -34,6 +35,7 @@ export const rebundle = async (config: RebundleConfig) => {
           projectPath,
           async update({pattern, globOptions}, update) {
             const matches = await glob(pattern, {cwd: projectPath, absolute: true, ...globOptions})
+            assert.ok(matches.length, `Expected matches for ${pattern.toString()}, got ${matches.length}`)
             for (const match of matches) {
               updateFile(match, update)
             }
