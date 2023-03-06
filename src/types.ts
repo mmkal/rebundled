@@ -1,3 +1,4 @@
+import type * as glob from 'glob'
 import type * as typefest from 'type-fest'
 import type rebundledPackageJson from '../package.json'
 
@@ -5,8 +6,11 @@ type Rebundlable = keyof (typeof rebundledPackageJson)['dependencies']
 type ScriptOutput = void | string | Buffer // `execSync` returns string | Buffer
 export type Script = (params: {
   packageJson: typefest.PackageJson
+  update(
+    opts: {pattern: string | string[]; globOptions?: glob.GlobOptionsWithFileTypesUnset},
+    update: (old: string) => string,
+  ): Promise<void>
   projectPath: string
-  readmePath?: string
 }) => typefest.Promisable<ScriptOutput>
 
 export type RebundleConfig = {

@@ -1,9 +1,10 @@
 import * as fs from 'fs'
+import {glob} from 'glob'
 import * as path from 'path'
 import type * as typefest from 'type-fest'
 import {args} from './args'
 import type {RebundleConfig} from './types'
-import {exec, log, execSyncStorage, logStorage, defaultGetRepo} from './util'
+import {exec, log, execSyncStorage, logStorage, defaultGetRepo, updateFile} from './util'
 
 export const rebundle = async (config: RebundleConfig) => {
   const parentDir = path.join(process.cwd(), 'generated/rebundled', config.package)
@@ -33,7 +34,12 @@ export const rebundle = async (config: RebundleConfig) => {
         await config.scripts[name]({
           packageJson: gitPackage,
           projectPath,
-          readmePath,
+          update: async ({pattern, globOptions}, update) => {
+            const matches = await glob(pattern, {cwd: projectPath, absolute: true, ...globOptions})
+            for (const match of matches) {
+              updateFile(match, update)
+            }
+          },
         })
       }
 

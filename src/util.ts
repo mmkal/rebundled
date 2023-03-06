@@ -2,7 +2,6 @@ import {AsyncLocalStorage} from 'async_hooks'
 import * as childProcess from 'child_process'
 import * as fs from 'fs'
 import type * as typefest from 'type-fest'
-import type {Script} from './types'
 
 import {getVersion} from './version'
 
@@ -31,19 +30,7 @@ export const updateFile = (filepath: string, update: (old: string) => string) =>
   fs.writeFileSync(filepath, updated)
 }
 
-export const updateReadme = (
-  {packageJson, readmePath}: Pick<Parameters<Script>[0], 'packageJson' | 'readmePath'>,
-  ...additionalDocs: string[]
-) => {
-  if (!readmePath) return
-  updateFile(readmePath, old =>
-    [
-      `⚠️⚠️ **This is a [rebundled](https://github.com/mmkal/rebundled) version of ${packageJson.name}**! ⚠️⚠️`,
-      ...additionalDocs,
-      old,
-    ].join('\n\n'),
-  )
-}
+export const rebundledNote = `⚠️⚠️ **This is a [rebundled](https://github.com/mmkal/rebundled) version of ${packageJson.name}**! ⚠️⚠️`
 
 export const preparePackageForMicrobundle = (
   packageJson: typefest.PackageJson,
