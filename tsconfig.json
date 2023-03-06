@@ -19,6 +19,7 @@
     ".*.*js",
     "*.md"
   ],
+  "exclude": ["generated"],
   "ts-node": {
     "transpileOnly": true
   }

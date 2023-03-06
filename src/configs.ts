@@ -14,7 +14,7 @@ export const configs: RebundleConfig[] = [
         })
         packageJson.types = './src/main.d.ts'
         packageJson.files?.push('./src/main.d.ts')
-        await update({pattern: './readme.md', globOptions: {nocase: true}}, old => [rebundledNote, old].join('\n\n'))
+        await update({pattern: './readme.md', globOptions: {nocase: true}}, old => [rebundledNote(packageJson), old].join('\n\n'))
       },
       bundle: () => exec(`microbundle --target node --generateTypes false --external none`),
       publish: () => exec('npm publish --access=public'),
@@ -37,7 +37,7 @@ export const configs: RebundleConfig[] = [
         )
         await update({pattern: './readme.md', globOptions: {nocase: true}}, old =>
           [
-            rebundledNote,
+            rebundledNote(packageJson),
             "**Note**: the default import has been replaced with a named import, so you must use `import {pMemoize} from '@rebundled/p-memoize'` instead of `import pMemoize from 'p-memoize'`.",
             old,
           ].join('\n\n'),

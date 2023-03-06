@@ -5,8 +5,10 @@ import type * as typefest from 'type-fest'
 
 import {getVersion} from './version'
 
-export const execSyncStorage = new AsyncLocalStorage<childProcess.ExecSyncOptions>()
-
+const execSyncStorage = new AsyncLocalStorage<childProcess.ExecSyncOptions>()
+export const runWithExecOptions = async <T>(options: childProcess.ExecSyncOptions, run: () => Promise<T>) => {
+  return execSyncStorage.run({...execSyncStorage.getStore(), ...options}, run)
+}
 export const exec = (command: string, overrides?: childProcess.ExecSyncOptions) => {
   const store = execSyncStorage.getStore()
   log(`Running`, command)
@@ -30,7 +32,7 @@ export const updateFile = (filepath: string, update: (old: string) => string) =>
   fs.writeFileSync(filepath, updated)
 }
 
-export const rebundledNote = `⚠️⚠️ **This is a [rebundled](https://github.com/mmkal/rebundled) version of ${packageJson.name}**! ⚠️⚠️`
+export const rebundledNote = (packageJson: typefest.PackageJson) => `⚠️⚠️ **This is a [rebundled](https://github.com/mmkal/rebundled) version of ${packageJson.name}**! ⚠️⚠️`
 
 export const preparePackageForMicrobundle = (
   packageJson: typefest.PackageJson,

@@ -4,7 +4,7 @@ import * as path from 'path'
 import type * as typefest from 'type-fest'
 import {args} from './args'
 import type {RebundleConfig} from './types'
-import {exec, log, execSyncStorage, logStorage, defaultGetRepo, updateFile} from './util'
+import {exec, log, runWithExecOptions, logStorage, defaultGetRepo, updateFile} from './util'
 
 export const rebundle = async (config: RebundleConfig) => {
   const parentDir = path.join(process.cwd(), 'generated/rebundled', config.package)
@@ -23,7 +23,7 @@ export const rebundle = async (config: RebundleConfig) => {
 
     const repoFolderName = fs.readdirSync(parentDir)[0]
     const repoDir = path.join(parentDir, repoFolderName)
-    await execSyncStorage.run({cwd: repoDir, stdio: 'inherit'}, async () => {
+    await runWithExecOptions({cwd: repoDir, stdio: 'inherit'}, async () => {
       const projectPath = path.join(parentDir, repoFolderName)
       const packageJsonPath = path.join(projectPath, 'package.json')
       const gitPackage = readPackageJson(packageJsonPath)
@@ -57,6 +57,6 @@ export const rebundle = async (config: RebundleConfig) => {
   }
 
   await logStorage.run([`package ${config.package}:`], async () => {
-    await execSyncStorage.run({cwd: parentDir, stdio: 'inherit'}, doit)
+    await runWithExecOptions({cwd: parentDir, stdio: 'inherit'}, doit)
   })
 }
