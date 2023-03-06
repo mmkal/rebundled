@@ -27,14 +27,12 @@ export const rebundle = async (config: RebundleConfig) => {
       const projectPath = path.join(parentDir, repoFolderName)
       const packageJsonPath = path.join(projectPath, 'package.json')
       const gitPackage = readPackageJson(packageJsonPath)
-      const readmeFilename = fs.readdirSync(repoDir).find(filename => filename.toLowerCase() === 'readme.md')
-      const readmePath = readmeFilename && path.join(repoDir, readmeFilename)
       const script = async (name: keyof RebundleConfig['scripts'], ...logArgs: unknown[]) => {
         log(`running ${name}`, ...logArgs)
         await config.scripts[name]({
           packageJson: gitPackage,
           projectPath,
-          update: async ({pattern, globOptions}, update) => {
+          async update({pattern, globOptions}, update) {
             const matches = await glob(pattern, {cwd: projectPath, absolute: true, ...globOptions})
             for (const match of matches) {
               updateFile(match, update)

@@ -14,7 +14,9 @@ export const configs: RebundleConfig[] = [
         })
         packageJson.types = './src/main.d.ts'
         packageJson.files?.push('./src/main.d.ts')
-        await update({pattern: './readme.md', globOptions: {nocase: true}}, old => [rebundledNote(packageJson), old].join('\n\n'))
+        await update({pattern: './readme.md', globOptions: {nocase: true}}, old =>
+          [rebundledNote(packageJson), old].join('\n\n'),
+        )
       },
       bundle: () => exec(`microbundle --target node --generateTypes false --external none`),
       publish: () => exec('npm publish --access=public'),
