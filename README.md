@@ -16,3 +16,7 @@ patch-package is great, but has some limitations. First, the work needs to be do
 ## How are packages versioned?
 
 This repo installs the rebundled packages as regular dependencies, and will rely on renovate to regularly updade them. A github action running against the main branch will automatically publish equivalent versions of the originals within a few days of them being published. _Note: at time of writing this GitHub action isn't set up yet_
+
+## What are the downsides? 
+
+- Maybe: the [dual package hazard](https://gist.github.com/sindresorhus/a39789f98801d908bbc7ff3ecc99d99c?permalink_comment_id=3850849#gistcomment-3850849).
