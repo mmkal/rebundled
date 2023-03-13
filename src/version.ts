@@ -5,19 +5,24 @@ import {args} from './args'
 import {exec, log} from './util'
 
 export function getVersion(packageJson: typefest.PackageJson) {
-  let version: string | null | undefined = args['--version'] || packageJson.version
-  if (args['--bump']) {
-    let json = exec(`npm view ${packageJson.name} versions --json`, {stdio: undefined}).toString().trim()
-    if (!json.startsWith('[')) json = `[${json}]` // weird npm view bug
+  let {version} = packageJson
+  if (args['--version']) {
+    version = args['--version']
+  } else {
+    // get latest, bump it to get a prerelease version
+    let json: string
+    try {
+      json = exec(`npm view ${packageJson.name} versions --json`, {stdio: undefined}).toString().trim()
+      if (!json.startsWith('[')) json = `[${json}]` // weird npm view bug
+    } catch {
+      json = JSON.stringify([version])
+    }
+
     const list = JSON.parse(json) as string[]
     const [latest] = list.sort(semver.compare).slice(-1)
-    const prerelease = semver.prerelease(latest)
     log(`Found published version`, latest)
-    version = prerelease ? semver.inc(latest, 'prerelease') : semver.inc(latest, 'patch')
+    version = semver.inc(latest, 'prerelease')!
     log(`Bumped version`, version)
-  } else if (args['--prerelease']) {
-    version = version && semver.inc(version, 'prerelease', args['--prerelease'])!
-    log(`New prerelease '${args['--prerelease']}' version:`, version)
   }
 
   assert.ok(version, `version must be defined`)

@@ -26,7 +26,9 @@ export const log = (...args: unknown[]) => {
 export const defaultGetRepo = (packageJson: typefest.PackageJson): string => {
   const githubBaseUrl = 'https://github.com/'
   const repository = typeof packageJson.repository === 'string' ? packageJson.repository : packageJson.repository?.url
-  return `${githubBaseUrl}${repository}`.replace(githubBaseUrl + githubBaseUrl, githubBaseUrl)
+  return `${githubBaseUrl}${repository}`
+    .replace(githubBaseUrl + githubBaseUrl, githubBaseUrl)
+    .replace(githubBaseUrl + 'git+', '')
 }
 
 export const updateFile = (filepath: string, update: (old: string) => string) => {
