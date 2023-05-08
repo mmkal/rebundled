@@ -19,7 +19,7 @@
   "devDependencies": {
     "@types/eslint": "8.37.0",
     "@types/jest": "29.5.1",
-    "@types/semver": "7.3.13",
+    "@types/semver": "7.5.0",
     "arg": "5.0.2",
     "eslint": "8.40.0",
     "eslint-plugin-mmkal": "0.1.2",
