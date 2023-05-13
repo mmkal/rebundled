@@ -36,6 +36,6 @@
   },
   "dependencies": {
     "p-memoize": "7.1.1",
-    "truncate-json": "1.5.0"
+    "truncate-json": "2.0.0"
   }
 }
