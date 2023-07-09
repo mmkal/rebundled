@@ -31,7 +31,7 @@
     "tempy": "3.0.0",
     "ts-jest": "29.1.1",
     "ts-node": "10.9.1",
-    "type-fest": "3.12.0",
+    "type-fest": "3.13.0",
     "typescript": "5.1.6"
   },
   "dependencies": {
