@@ -36,7 +36,7 @@
     "typescript": "5.2.2"
   },
   "dependencies": {
-    "postgrest-js": "github:mmkal/postgrest-js#737f5c8bcbfdc06b4f1d6209cd3ff08e0a133f04",
+    "postgrest-js": "github:mmkal/postgrest-js#452e0b06a99494becaf30073b01c52db16dfcccb",
     "p-memoize": "7.1.1",
     "truncate-json": "1.5.0"
   }
