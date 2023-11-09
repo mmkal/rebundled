@@ -9,8 +9,8 @@ dependencies:
     specifier: 7.1.1
     version: 7.1.1
   postgrest-js:
-    specifier: github:mmkal/postgrest-js#452e0b06a99494becaf30073b01c52db16dfcccb
-    version: github.com/mmkal/postgrest-js/452e0b06a99494becaf30073b01c52db16dfcccb
+    specifier: github:mmkal/postgrest-js#18f580c83d4ceefbcd5360e3df229f3547d610a8
+    version: github.com/mmkal/postgrest-js/18f580c83d4ceefbcd5360e3df229f3547d610a8
   truncate-json:
     specifier: 1.5.0
     version: 1.5.0
@@ -9347,8 +9347,8 @@ packages:
     engines: {node: '>=12.20'}
     dev: true
 
-  github.com/mmkal/postgrest-js/452e0b06a99494becaf30073b01c52db16dfcccb:
-    resolution: {tarball: https://codeload.github.com/mmkal/postgrest-js/tar.gz/452e0b06a99494becaf30073b01c52db16dfcccb}
+  github.com/mmkal/postgrest-js/18f580c83d4ceefbcd5360e3df229f3547d610a8:
+    resolution: {tarball: https://codeload.github.com/mmkal/postgrest-js/tar.gz/18f580c83d4ceefbcd5360e3df229f3547d610a8}
     name: '@supabase/postgrest-js'
     version: 0.0.0-automated
     dependencies:
