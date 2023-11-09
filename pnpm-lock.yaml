@@ -12,8 +12,8 @@ dependencies:
     specifier: github:mmkal/postgrest-js#452e0b06a99494becaf30073b01c52db16dfcccb
     version: github.com/mmkal/postgrest-js/452e0b06a99494becaf30073b01c52db16dfcccb
   truncate-json:
-    specifier: 1.5.0
-    version: 1.5.0
+    specifier: 3.0.0
+    version: 3.0.0
 
 devDependencies:
   '@types/eslint':
@@ -5041,9 +5041,9 @@ packages:
     resolution: {integrity: sha512-EtKwoO6kxCL9WO5xipiHTZlSzBm7WLT627TqC/uVRd0HKmq8NXyebnNYxDoBi7wt8eTWrUrKXCOVaFq9x1kgag==}
     dev: true
 
-  /guess-json-indent@1.5.0:
-    resolution: {integrity: sha512-Lxk6NiGPsXgvv595qzeN9E75zwUiFssiooHGfVOMNzHUQQbZ9EhyvlGCpIxHqB7d0rnJ9oeDC5uzqfyILrNtpg==}
-    engines: {node: '>=14.18.0'}
+  /guess-json-indent@3.0.0:
+    resolution: {integrity: sha512-9+IPPxFy5zEH4xH9cBV/yTYySgcgeSiPHfsJi10Z5VgXc7ysIPoClfkw4WE0vuxNPJLk+R7njJvdJ5czuGQA5Q==}
+    engines: {node: '>=18.18.0'}
     dev: false
 
   /gzip-size@3.0.0:
@@ -8461,14 +8461,14 @@ packages:
       escape-string-regexp: 2.0.0
     dev: true
 
-  /string-byte-length@1.6.0:
-    resolution: {integrity: sha512-h9KzyolUa+9q6yHPCGzvPOta0VpWqG0/x0o1on22PZL0t+8txWXl0JCkRG/Gvi58HnyDvT1YCzDH2bAOpEc++g==}
-    engines: {node: '>=14.18.0'}
+  /string-byte-length@3.0.0:
+    resolution: {integrity: sha512-DDmoqcNN59fq0E4tID3TuIZ2ASUL/ZDrRf+mH5YSXwCnMgtCdIpo4iR6BhspUJqNuYeVtkEkDjIj4rqyeUwH8g==}
+    engines: {node: '>=18.18.0'}
     dev: false
 
-  /string-byte-slice@1.6.0:
-    resolution: {integrity: sha512-CcfoSIJ1BowMW9d8bhfR/LbbwtpbK0VRaMcH6sUVa271GX7ONYPXOglWR7IAxzf9eCKXSHHRQPzCp+WXt+rsZg==}
-    engines: {node: '>=14.18.0'}
+  /string-byte-slice@3.0.0:
+    resolution: {integrity: sha512-KqTTvThKPDgBPr9jI2cOdO04tJ+upcADk4j4zmcBNmG6Bqstsq1x1Z3xvJAPqRQgPE8yocXNLVZuCfYlv4+PTg==}
+    engines: {node: '>=18.18.0'}
     dev: false
 
   /string-hash@1.1.3:
@@ -8803,13 +8803,13 @@ packages:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
     dev: false
 
-  /truncate-json@1.5.0:
-    resolution: {integrity: sha512-MegVQFZkA8silLelWzVGoUUMc2UOnmqR2Bjc5pfH5mEbHzxs9/Z/fxxRLulQ8bZszETUjA2KWTOrq1hwHMd2lA==}
-    engines: {node: '>=14.18.0'}
+  /truncate-json@3.0.0:
+    resolution: {integrity: sha512-CkSXeOifycZuzTOxY6v/mCRnHrtOsb9ccL5GW6qOFBTfVDXW+zPgaV8BJZzFgi88DnVjgnSZupzAxNsdXcmHCA==}
+    engines: {node: '>=18.18.0'}
     dependencies:
-      guess-json-indent: 1.5.0
-      string-byte-length: 1.6.0
-      string-byte-slice: 1.6.0
+      guess-json-indent: 3.0.0
+      string-byte-length: 3.0.0
+      string-byte-slice: 3.0.0
     dev: false
 
   /ts-jest@29.1.1(@babel/core@7.22.20)(jest@29.7.0)(typescript@5.2.2):
