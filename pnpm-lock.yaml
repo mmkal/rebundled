@@ -8,6 +8,9 @@ dependencies:
   p-memoize:
     specifier: 7.1.1
     version: 7.1.1
+  postgrest-js:
+    specifier: github:mmkal/postgrest-js#452e0b06a99494becaf30073b01c52db16dfcccb
+    version: github.com/mmkal/postgrest-js/452e0b06a99494becaf30073b01c52db16dfcccb
   truncate-json:
     specifier: 1.5.0
     version: 1.5.0
@@ -2055,6 +2058,13 @@ packages:
     dependencies:
       '@sinonjs/commons': 3.0.0
     dev: true
+
+  /@supabase/node-fetch@2.6.14:
+    resolution: {integrity: sha512-w/Tsd22e/5fAeoxqQ4P2MX6EyF+iM6rc9kmlMVFkHuG0rAltt2TLhFbDJfemnHbtvnazWaRfy5KnFU/SYT37dQ==}
+    engines: {node: 4.x || >=6.0.0}
+    dependencies:
+      whatwg-url: 5.0.0
+    dev: false
 
   /@surma/rollup-plugin-off-main-thread@2.2.3:
     resolution: {integrity: sha512-lR8q/9W7hZpMWweNiAKU7NQerBnzQQLvi8qnTDU/fxItPhtZVMbPV3lbCwjhIlNBe9Bbr5V+KHshvWmVSG9cxQ==}
@@ -8789,6 +8799,10 @@ packages:
       is-number: 7.0.0
     dev: true
 
+  /tr46@0.0.3:
+    resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
+    dev: false
+
   /truncate-json@1.5.0:
     resolution: {integrity: sha512-MegVQFZkA8silLelWzVGoUUMc2UOnmqR2Bjc5pfH5mEbHzxs9/Z/fxxRLulQ8bZszETUjA2KWTOrq1hwHMd2lA==}
     engines: {node: '>=14.18.0'}
@@ -9147,6 +9161,17 @@ packages:
       defaults: 1.0.4
     dev: true
 
+  /webidl-conversions@3.0.1:
+    resolution: {integrity: sha512-2JAn3z8AR6rjK8Sm8orRC0h/bcl/DqL7tRPdGZ4I1CjdF+EaMLmYxBHyXuKL849eucPFhvBoxMsflfOb8kxaeQ==}
+    dev: false
+
+  /whatwg-url@5.0.0:
+    resolution: {integrity: sha512-saE57nupxk6v3HY35+jzBwYa0rKSy0XR8JSxZPwgLr7ys0IBzhGviA1/TUGJLmSVqs8pb9AnvICXEuOHLprYTw==}
+    dependencies:
+      tr46: 0.0.3
+      webidl-conversions: 3.0.1
+    dev: false
+
   /which-boxed-primitive@1.0.2:
     resolution: {integrity: sha512-bwZdv0AKLpplFY2KZRX6TvyuN7ojjr7lwkg6ml0roIy9YeuSr7JS372qlNW18UQYzgYK9ziGcerWqZOmEn9VNg==}
     dependencies:
@@ -9321,3 +9346,11 @@ packages:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
     dev: true
+
+  github.com/mmkal/postgrest-js/452e0b06a99494becaf30073b01c52db16dfcccb:
+    resolution: {tarball: https://codeload.github.com/mmkal/postgrest-js/tar.gz/452e0b06a99494becaf30073b01c52db16dfcccb}
+    name: '@supabase/postgrest-js'
+    version: 0.0.0-automated
+    dependencies:
+      '@supabase/node-fetch': 2.6.14
+    dev: false

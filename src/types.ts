@@ -1,10 +1,14 @@
 import type * as glob from 'glob'
 import type * as typefest from 'type-fest'
 import type rebundledPackageJson from '../package.json'
+import type {defaultGetRepo} from './util'
 
 type Rebundlable = keyof (typeof rebundledPackageJson)['dependencies']
 type ScriptOutput = void | string | Buffer // `execSync` returns string | Buffer
 export type Script = (params: {
+  /** frozen version of the upstream package, not modifiable */
+  originalPackageJson: typefest.ReadonlyDeep<typefest.PackageJson>
+  /** modifiable reference to the rebundled package.json - typically has its `name` and `version` altered, sometimes entrypoints, scripts etc. too */
   packageJson: typefest.PackageJson
   update(
     opts: {pattern: string | string[]; globOptions?: glob.GlobOptionsWithFileTypesUnset},
@@ -16,7 +20,7 @@ export type Script = (params: {
 export type RebundleConfig = {
   package: Rebundlable
   /** How to find the git repo for the given package. */
-  repo?: (packageJson: typefest.PackageJson) => string
+  repo?: typeof defaultGetRepo
   scripts: {
     /** How to install dependencies for the source repo. e.g. `exec('npm install')` or `exec('yarn')` */
     install: Script

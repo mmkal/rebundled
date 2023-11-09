@@ -60,4 +60,15 @@ export const configs: RebundleConfig[] = [
       publish: () => exec('npm publish --access=public'),
     },
   },
+  {
+    package: 'postgrest-js',
+    scripts: {
+      install: () => exec('npm install'),
+      bundle: () => exec('npm run build'),
+      async modify({update, packageJson}) {
+        await update({pattern: './README.md'}, old => [rebundledNote(packageJson), old].join('\n\n'))
+      },
+      publish: () => exec('npm publish --access=public'),
+    },
+  },
 ]

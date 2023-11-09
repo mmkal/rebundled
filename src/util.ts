@@ -13,7 +13,7 @@ export const runWithExecOptions = async <T>(options: childProcess.ExecSyncOption
 
 export const exec = (command: string, overrides?: childProcess.ExecSyncOptions) => {
   const store = execSyncStorage.getStore()
-  log(`Running`, command)
+  log(`Running in ${store?.cwd?.toString()}:\n>`, command)
   return childProcess.execSync(command, {...store, ...overrides})
 }
 
@@ -23,10 +23,34 @@ export const log = (...args: unknown[]) => {
   console.log(...(logStorage.getStore() || []), ...args)
 }
 
-export const defaultGetRepo = (packageJson: typefest.PackageJson): string => {
+export const defaultGetRepo = ({
+  packageJson,
+  installedVersion,
+}: {
+  packageJson: typefest.PackageJson
+  installedVersion: string
+}) => {
   const githubBaseUrl = 'https://github.com/'
-  const repository = typeof packageJson.repository === 'string' ? packageJson.repository : packageJson.repository?.url
-  return `${githubBaseUrl}${repository}`.replace(githubBaseUrl + githubBaseUrl, githubBaseUrl)
+  let repository: string | undefined
+  let sha: string | undefined
+  if (installedVersion.startsWith('github:')) {
+    const parts = installedVersion.replace('github:', '').split('#')
+    repository = parts[0]
+    sha = parts[1]
+  } else if (typeof packageJson.repository === 'string') {
+    repository = packageJson.repository
+  } else {
+    repository = packageJson.repository?.url
+  }
+
+  if (!repository) {
+    throw new Error(`Couldn't find a repository for ${packageJson.name}, version: ${installedVersion}`)
+  }
+
+  return {
+    url: `${githubBaseUrl}${repository}`.replace(githubBaseUrl + githubBaseUrl, githubBaseUrl),
+    sha,
+  }
 }
 
 export const updateFile = (filepath: string, update: (old: string) => string) => {
@@ -38,13 +62,16 @@ export const updateFile = (filepath: string, update: (old: string) => string) =>
 export const rebundledNote = (packageJson: typefest.PackageJson) =>
   `⚠️⚠️ **This is a [rebundled](https://github.com/mmkal/rebundled) version of ${packageJson.name}**! ⚠️⚠️`
 
+export const setPackageNameAndVersion = (packageJson: typefest.PackageJson) => {
+  packageJson.name = `@rebundled/${packageJson.name!.split('/').slice(-1)[0]}`
+  packageJson.version = getVersion(packageJson)
+}
+
 export const preparePackageForMicrobundle = (
   packageJson: typefest.PackageJson,
   parameters: MicrobundlePackageJsonProps,
 ): void => {
-  packageJson.name = `@rebundled/${packageJson.name!.split('/').slice(-1)[0]}`
   packageJson.type = 'module'
-  delete packageJson.typings
+  delete packageJson.typings // `parameters` requires the `types` property which is an alias for `typings`
   Object.assign(packageJson, parameters)
-  packageJson.version = getVersion(packageJson)
 }
