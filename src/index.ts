@@ -9,7 +9,7 @@ import {exec, log, runWithExecOptions, logStorage, defaultGetRepo, updateFile, s
 import rebundledPackageJson from '../package.json'
 
 export const rebundle = async (config: RebundleConfig) => {
-  const parentDir = path.join(process.cwd(), 'generated/rebundled', config.package)
+  const parentDir = path.join('/tmp/rebundled', config.package)
   const doit = async () => {
     const readPackageJson = (filepath: string) =>
       JSON.parse(fs.readFileSync(filepath).toString()) as typefest.PackageJson
@@ -25,15 +25,16 @@ export const rebundle = async (config: RebundleConfig) => {
     fs.mkdirSync(parentDir, {recursive: true})
     log(`Cloning into ${parentDir}. Git repo: ${JSON.stringify(gitRepo)}`)
     exec(`git clone ${gitRepo.url}`)
-    if (gitRepo.sha) {
-      exec('git status')
-      exec('git pull origin')
-      exec(`git reset --hard ${gitRepo.sha}`)
-    }
 
     const repoFolderName = fs.readdirSync(parentDir)[0]
     const repoDir = path.join(parentDir, repoFolderName)
     await runWithExecOptions({cwd: repoDir, stdio: 'inherit'}, async () => {
+      if (gitRepo.sha) {
+        exec('git status')
+        exec('git pull origin')
+        exec(`git reset --hard ${gitRepo.sha}`)
+      }
+
       const projectPath = path.join(parentDir, repoFolderName)
       const packageJsonPath = path.join(projectPath, 'package.json')
       const gitPackage = readPackageJson(packageJsonPath)
@@ -60,10 +61,10 @@ export const rebundle = async (config: RebundleConfig) => {
       await script('install')
       fs.writeFileSync(packageJsonPath, JSON.stringify(gitPackage, null, 2))
       await script('bundle')
+      log(`Explore the generated package at ${projectPath}`)
       exec('echo "npm whoami: $(npm whoami)"')
       if (args['--dry-run']) {
         log(`Dry run: skipping publish`, `${gitPackage.name}@${gitPackage.version}`)
-        log(`Explore the generated package at ${projectPath}`)
       } else {
         await script('publish', `${gitPackage.name}@${gitPackage.version}`)
       }

@@ -13,7 +13,7 @@ export const runWithExecOptions = async <T>(options: childProcess.ExecSyncOption
 
 export const exec = (command: string, overrides?: childProcess.ExecSyncOptions) => {
   const store = execSyncStorage.getStore()
-  log(`Running in ${store?.cwd}:`, command)
+  log(`Running in ${store?.cwd}:\n>`, command)
   return childProcess.execSync(command, {...store, ...overrides})
 }
 
