@@ -51,9 +51,9 @@ export const rebundle = async (config: RebundleConfig) => {
       await script('install')
       fs.writeFileSync(packageJsonPath, JSON.stringify(gitPackage, null, 2))
       await script('bundle')
+      exec('echo "npm whoami: $(npm whoami)"')
       if (args['--dry-run']) {
         log(`Dry run: skipping publish`, `${gitPackage.name}@${gitPackage.version}`)
-        exec('npm whoami')
       } else {
         await script('publish', `${gitPackage.name}@${gitPackage.version}`)
       }

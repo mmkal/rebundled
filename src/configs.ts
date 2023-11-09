@@ -68,7 +68,7 @@ export const configs: RebundleConfig[] = [
       modify: async ({update, packageJson}) => {
         await update({pattern: './README.md'}, old => [rebundledNote(packageJson), old].join('\n\n'))
       },
-      publish: () => exec('echo npm publish --access=public'),
+      publish: () => exec('npm publish --access=public'),
     }
   }
 ]
