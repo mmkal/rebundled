@@ -6,6 +6,7 @@ import type * as typefest from 'type-fest'
 import {args} from './args'
 import type {RebundleConfig} from './types'
 import {exec, log, runWithExecOptions, logStorage, defaultGetRepo, updateFile, setPackageNameAndVersion} from './util'
+import rebundledPackageJson from '../package.json'
 
 export const rebundle = async (config: RebundleConfig) => {
   const parentDir = path.join(process.cwd(), 'generated/rebundled', config.package)
@@ -14,13 +15,21 @@ export const rebundle = async (config: RebundleConfig) => {
       JSON.parse(fs.readFileSync(filepath).toString()) as typefest.PackageJson
     const nodeModulesPackage = readPackageJson(path.join('node_modules', config.package, 'package.json'))
     const getRepo = config.repo || defaultGetRepo
-    const gitRepo = getRepo(nodeModulesPackage)
+    const gitRepo = getRepo({
+      packageJson: nodeModulesPackage,
+      installedVersion: rebundledPackageJson.dependencies[config.package],
+    })
 
     fs.mkdirSync(parentDir, {recursive: true})
     exec(`rm -rf ${parentDir}/`)
     fs.mkdirSync(parentDir, {recursive: true})
-    log(`Cloning into ${parentDir}. Git repo: ${gitRepo}`)
-    exec(`git clone ${gitRepo}`)
+    log(`Cloning into ${parentDir}. Git repo: ${JSON.stringify(gitRepo)}`)
+    exec(`git clone ${gitRepo.url}`)
+    if (gitRepo.sha) {
+      exec('git status')
+      exec('git pull origin')
+      exec(`git reset --hard ${gitRepo.sha}`)
+    }
 
     const repoFolderName = fs.readdirSync(parentDir)[0]
     const repoDir = path.join(parentDir, repoFolderName)
@@ -54,6 +63,7 @@ export const rebundle = async (config: RebundleConfig) => {
       exec('echo "npm whoami: $(npm whoami)"')
       if (args['--dry-run']) {
         log(`Dry run: skipping publish`, `${gitPackage.name}@${gitPackage.version}`)
+        log(`Explore the generated package at ${projectPath}`)
       } else {
         await script('publish', `${gitPackage.name}@${gitPackage.version}`)
       }

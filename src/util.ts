@@ -13,7 +13,7 @@ export const runWithExecOptions = async <T>(options: childProcess.ExecSyncOption
 
 export const exec = (command: string, overrides?: childProcess.ExecSyncOptions) => {
   const store = execSyncStorage.getStore()
-  log(`Running`, command)
+  log(`Running in ${store?.cwd}:`, command)
   return childProcess.execSync(command, {...store, ...overrides})
 }
 
@@ -23,10 +23,27 @@ export const log = (...args: unknown[]) => {
   console.log(...(logStorage.getStore() || []), ...args)
 }
 
-export const defaultGetRepo = (packageJson: typefest.PackageJson): string => {
+export const defaultGetRepo = ({packageJson, installedVersion}: {packageJson: typefest.PackageJson, installedVersion: string}) => {
   const githubBaseUrl = 'https://github.com/'
-  const repository = typeof packageJson.repository === 'string' ? packageJson.repository : packageJson.repository?.url
-  return `${githubBaseUrl}${repository}`.replace(githubBaseUrl + githubBaseUrl, githubBaseUrl)
+  let repository: string | undefined
+  let sha: string | undefined
+  if (installedVersion.startsWith('github:')) {
+    const parts = installedVersion.replace('github:', '').split('#')
+    repository = parts[0]
+    sha = parts[1]
+  } else if (typeof packageJson.repository === 'string') {
+    repository = packageJson.repository
+  } else {
+    repository = packageJson.repository?.url
+  } 
+  if (!repository) {
+    throw new Error(`Couldn't find a repository for ${packageJson.name}, version: ${installedVersion}`)
+  }
+
+  return {
+    url: `${githubBaseUrl}${repository}`.replace(githubBaseUrl + githubBaseUrl, githubBaseUrl),
+    sha,
+  }
 }
 
 export const updateFile = (filepath: string, update: (old: string) => string) => {
