@@ -3,10 +3,10 @@ import * as fs from 'fs'
 import {glob} from 'glob'
 import * as path from 'path'
 import type * as typefest from 'type-fest'
+import rebundledPackageJson from '../package.json'
 import {args} from './args'
 import type {RebundleConfig} from './types'
 import {exec, log, runWithExecOptions, logStorage, defaultGetRepo, updateFile, setPackageNameAndVersion} from './util'
-import rebundledPackageJson from '../package.json'
 
 export const rebundle = async (config: RebundleConfig) => {
   const parentDir = path.join('/tmp/rebundled', config.package)
@@ -38,7 +38,9 @@ export const rebundle = async (config: RebundleConfig) => {
       const projectPath = path.join(parentDir, repoFolderName)
       const packageJsonPath = path.join(projectPath, 'package.json')
       const gitPackage = readPackageJson(packageJsonPath)
-      const originalPackageJson = JSON.parse(JSON.stringify(packageJsonPath)) as typefest.ReadonlyDeep<typefest.PackageJson>
+      const originalPackageJson = JSON.parse(
+        JSON.stringify(packageJsonPath),
+      ) as typefest.ReadonlyDeep<typefest.PackageJson>
       const script = async (name: keyof RebundleConfig['scripts'], ...logArgs: unknown[]) => {
         log(`running ${name}`, ...logArgs)
         await config.scripts[name]({

@@ -65,10 +65,10 @@ export const configs: RebundleConfig[] = [
     scripts: {
       install: () => exec('npm install'),
       bundle: () => exec('npm run build'),
-      modify: async ({update, packageJson}) => {
+      async modify({update, packageJson}) {
         await update({pattern: './README.md'}, old => [rebundledNote(packageJson), old].join('\n\n'))
       },
       publish: () => exec('npm publish --access=public'),
-    }
-  }
+    },
+  },
 ]

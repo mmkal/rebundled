@@ -13,7 +13,7 @@ export const runWithExecOptions = async <T>(options: childProcess.ExecSyncOption
 
 export const exec = (command: string, overrides?: childProcess.ExecSyncOptions) => {
   const store = execSyncStorage.getStore()
-  log(`Running in ${store?.cwd}:\n>`, command)
+  log(`Running in ${store?.cwd?.toString()}:\n>`, command)
   return childProcess.execSync(command, {...store, ...overrides})
 }
 
@@ -23,7 +23,13 @@ export const log = (...args: unknown[]) => {
   console.log(...(logStorage.getStore() || []), ...args)
 }
 
-export const defaultGetRepo = ({packageJson, installedVersion}: {packageJson: typefest.PackageJson, installedVersion: string}) => {
+export const defaultGetRepo = ({
+  packageJson,
+  installedVersion,
+}: {
+  packageJson: typefest.PackageJson
+  installedVersion: string
+}) => {
   const githubBaseUrl = 'https://github.com/'
   let repository: string | undefined
   let sha: string | undefined
@@ -35,7 +41,8 @@ export const defaultGetRepo = ({packageJson, installedVersion}: {packageJson: ty
     repository = packageJson.repository
   } else {
     repository = packageJson.repository?.url
-  } 
+  }
+
   if (!repository) {
     throw new Error(`Couldn't find a repository for ${packageJson.name}, version: ${installedVersion}`)
   }
