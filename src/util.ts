@@ -38,13 +38,16 @@ export const updateFile = (filepath: string, update: (old: string) => string) =>
 export const rebundledNote = (packageJson: typefest.PackageJson) =>
   `⚠️⚠️ **This is a [rebundled](https://github.com/mmkal/rebundled) version of ${packageJson.name}**! ⚠️⚠️`
 
+export const setPackageNameAndVersion = (packageJson: typefest.PackageJson) => {
+  packageJson.name = `@rebundled/${packageJson.name!.split('/').slice(-1)[0]}`
+  packageJson.version = getVersion(packageJson)
+}
+
 export const preparePackageForMicrobundle = (
   packageJson: typefest.PackageJson,
   parameters: MicrobundlePackageJsonProps,
 ): void => {
-  packageJson.name = `@rebundled/${packageJson.name!.split('/').slice(-1)[0]}`
   packageJson.type = 'module'
-  delete packageJson.typings
+  delete packageJson.typings // `parameters` requires the `types` property which is an alias for `typings`
   Object.assign(packageJson, parameters)
-  packageJson.version = getVersion(packageJson)
 }
