@@ -5,7 +5,7 @@
   "scripts": {
     "rebundle": "npm_config_registry=https://registry.npmjs.org ts-node src/run",
     "eslint": "eslint --ext '.ts,.js,.md'",
-    "lint": "tsc && yarn eslint src",
+    "lint": "tsc && pnpm eslint src",
     "build": "tsc -p tsconfig.lib.json",
     "test": "jest"
   },
