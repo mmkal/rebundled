@@ -1,7 +1,7 @@
 {
   "name": "rebundled",
   "version": "0.0.0",
-  "packageManager": "pnpm@8.10.2",
+  "packageManager": "pnpm@8.10.3",
   "scripts": {
     "rebundle": "npm_config_registry=https://registry.npmjs.org ts-node src/run",
     "eslint": "eslint --ext '.ts,.js,.md'",
