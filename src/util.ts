@@ -63,7 +63,7 @@ export const rebundledNote = (packageJson: typefest.PackageJson) =>
   `⚠️⚠️ **This is a [rebundled](https://github.com/mmkal/rebundled) version of ${packageJson.name}**! ⚠️⚠️`
 
 export const setPackageNameAndVersion = (packageJson: typefest.PackageJson) => {
-  packageJson.name = `@rebundled/${packageJson.name!.split('/').slice(-1)[0]}`
+  packageJson.name = `@rebundled/${packageJson.name!.split('/').at(-1)}`
   packageJson.version = getVersion(packageJson)
 }
 
