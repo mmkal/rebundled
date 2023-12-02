@@ -15,7 +15,7 @@ jobs:
       - run: pnpm run build
       - run: pnpm run lint
       - run: pnpm test -- --coverage --coverageReporters="json-summary"
-      - uses: actions/github-script@v6
+      - uses: actions/github-script@v7
         id: coveragejson
         with:
           script: |
