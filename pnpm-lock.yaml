@@ -44,8 +44,8 @@ devDependencies:
     specifier: 0.15.1
     version: 0.15.1(ts-node@10.9.2)
   np:
-    specifier: 9.1.0
-    version: 9.1.0(typescript@5.3.3)
+    specifier: 9.2.0
+    version: 9.2.0(typescript@5.3.3)
   semver:
     specifier: 7.5.4
     version: 7.5.4
@@ -6899,8 +6899,8 @@ packages:
     engines: {node: '>=14.16'}
     dev: true
 
-  /np@9.1.0(typescript@5.3.3):
-    resolution: {integrity: sha512-c1QCU/+qN2N6epFyW4HpfIG5/wLIBOzmvjb2isjbecRK5qhHNjS67WnZ93jPScL1N3Iss7LfS9RFhpdj/VD7qQ==}
+  /np@9.2.0(typescript@5.3.3):
+    resolution: {integrity: sha512-VYA8IKyx5XJqROr2vu8NAstfgBznrnOu3PUByFl3TBwzQVkeGC+gzOPzGbvYKM1QwlX6Gt7kVSPMzDP4qkSs1g==}
     engines: {git: '>=2.11.0', node: '>=18', npm: '>=9', yarn: '>=1.7.0'}
     hasBin: true
     dependencies:
