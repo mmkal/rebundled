@@ -1,9 +1,8 @@
 import type * as glob from 'glob'
 import type * as typefest from 'type-fest'
-import type rebundledPackageJson from '../package.json'
 import type {defaultGetRepo} from './util'
 
-type Rebundlable = keyof (typeof rebundledPackageJson)['dependencies']
+type Rebundlable = keyof NonNullable<typefest.PackageJson['dependencies']>
 type ScriptOutput = void | string | Buffer // `execSync` returns string | Buffer
 export type Script = (params: {
   /** frozen version of the upstream package, not modifiable */

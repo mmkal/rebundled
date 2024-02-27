@@ -1,6 +1,7 @@
 import {AsyncLocalStorage} from 'async_hooks'
 import * as childProcess from 'child_process'
 import * as fs from 'fs'
+import * as path from 'path'
 import type * as typefest from 'type-fest'
 import type {MicrobundlePackageJsonProps} from './types'
 
@@ -85,10 +86,16 @@ export const preparePackageForMicrobundle = (
 }
 
 /** edits an object to **delete** and then **reapply** its keys */
-const reorderKeys = <T extends {}>(obj: T, fn: (entry: {key: keyof T, value: T[keyof T], index: number}) => number) => {
-  const entries = Object.entries(obj).map(([key, value], index) => ({key, value, index}) as Parameters<typeof fn>[0]).sort((a, b) => {
-    return fn(a) - fn(b)
-  })
+const reorderKeys = <T extends {}>(obj: T, fn: (entry: {key: keyof T; value: T[keyof T]; index: number}) => number) => {
+  const entries = Object.entries(obj)
+    .map(([key, value], index) => ({key, value, index}) as Parameters<typeof fn>[0])
+    .sort((a, b) => {
+      return fn(a) - fn(b)
+    })
   entries.forEach(({key}) => delete obj[key])
   entries.forEach(({key, value}) => (obj[key] = value))
+}
+
+export const getRebundledPackageJson = () => {
+  return JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'package.json')).toString()) as typefest.PackageJson
 }

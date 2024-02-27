@@ -3,12 +3,21 @@ import * as fs from 'fs'
 import {glob} from 'glob'
 import * as path from 'path'
 import type * as typefest from 'type-fest'
-import rebundledPackageJson from '../package.json'
 import {args} from './args'
 import type {RebundleConfig} from './types'
-import {exec, log, runWithExecOptions, logStorage, defaultGetRepo, updateFile, setPackageNameAndVersion} from './util'
+import {
+  exec,
+  log,
+  runWithExecOptions,
+  logStorage,
+  defaultGetRepo,
+  updateFile,
+  setPackageNameAndVersion,
+  getRebundledPackageJson,
+} from './util'
 
 export const rebundle = async (config: RebundleConfig) => {
+  const rebundledPackageJson = getRebundledPackageJson()
   const parentDir = path.join('/tmp/rebundled', config.package)
   const doit = async () => {
     const readPackageJson = (filepath: string) => {
@@ -20,7 +29,7 @@ export const rebundle = async (config: RebundleConfig) => {
     const getRepo = config.repo || defaultGetRepo
     const gitRepo = getRepo({
       packageJson: nodeModulesPackage,
-      installedVersion: rebundledPackageJson.dependencies[config.package],
+      installedVersion: rebundledPackageJson.dependencies![config.package]!,
     })
 
     fs.mkdirSync(parentDir, {recursive: true})
