@@ -14,9 +14,6 @@
     "*.md"
   ],
   "author": "",
-  "np": {
-    "cleanup": false
-  },
   "devDependencies": {
     "@types/eslint": "8.56.3",
     "@types/jest": "29.5.12",
@@ -36,8 +33,9 @@
     "typescript": "5.3.3"
   },
   "dependencies": {
-    "postgrest-js": "github:mmkal/postgrest-js#452e0b06a99494becaf30073b01c52db16dfcccb",
+    "execa": "^8.0.1",
     "p-memoize": "7.1.1",
+    "postgrest-js": "github:mmkal/postgrest-js#452e0b06a99494becaf30073b01c52db16dfcccb",
     "truncate-json": "1.5.0"
   }
 }

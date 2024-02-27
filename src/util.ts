@@ -59,7 +59,7 @@ export const updateFile = (filepath: string, update: (old: string) => string) =>
   fs.writeFileSync(filepath, updated)
 }
 
-export const rebundledNote = (packageJson: typefest.PackageJson) =>
+export const rebundledNote = (packageJson: typefest.ReadonlyDeep<typefest.PackageJson>) =>
   `⚠️⚠️ **This is a [rebundled](https://github.com/mmkal/rebundled) version of ${packageJson.name}**! ⚠️⚠️`
 
 export const setPackageNameAndVersion = (packageJson: typefest.PackageJson) => {
@@ -71,7 +71,24 @@ export const preparePackageForMicrobundle = (
   packageJson: typefest.PackageJson,
   parameters: MicrobundlePackageJsonProps,
 ): void => {
+  const newKeys = new Set(Object.keys(parameters).filter(key => !(key in packageJson)))
   packageJson.type = 'module'
   delete packageJson.typings // `parameters` requires the `types` property which is an alias for `typings`
   Object.assign(packageJson, parameters)
+  reorderKeys(packageJson, ({key, index}) => {
+    // put most relevant stuff at the top
+    if (key === 'name') return -3
+    if (key === 'version') return -2
+    if (newKeys.has(key)) return -1
+    return index
+  })
+}
+
+/** edits an object to **delete** and then **reapply** its keys */
+const reorderKeys = <T extends {}>(obj: T, fn: (entry: {key: keyof T, value: T[keyof T], index: number}) => number) => {
+  const entries = Object.entries(obj).map(([key, value], index) => ({key, value, index}) as Parameters<typeof fn>[0]).sort((a, b) => {
+    return fn(a) - fn(b)
+  })
+  entries.forEach(({key}) => delete obj[key])
+  entries.forEach(({key, value}) => (obj[key] = value))
 }

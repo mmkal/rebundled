@@ -22,6 +22,7 @@ export function getVersion(packageJson: typefest.PackageJson) {
     log(`New prerelease '${args['--prerelease']}' version:`, version)
   }
 
-  assert.ok(version, `couldn't get a version`)
+  assert.ok(version, `couldn't get a version. Specify one with --version, or use --bump or --prerelease`)
+  assert.ok(semver.valid(version), `invalid version: ${version}`)
   return version
 }

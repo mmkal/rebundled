@@ -61,6 +61,41 @@ export const configs: RebundleConfig[] = [
     },
   },
   {
+    package: 'execa',
+    scripts: {
+      install: () => exec('npm install --ignore-scripts'),
+      async modify({packageJson, originalPackageJson, update}) {
+        preparePackageForMicrobundle(packageJson, {
+          source: './index.js',
+          type: undefined,
+          main: './dist/main.cjs',
+          module: './dist/main.mjs',
+          types: './index.d.ts',
+          unpkg: './dist/main.umd.js',
+          files: ['dist', 'index.js', 'index.d.ts'],
+          exports: {
+            require: './dist/main.cjs',
+            import: './dist/main.mjs',
+            types: './index.d.ts',
+          },
+        })
+        packageJson.scripts = {} // prevent weird side effects on prepublish etc.
+        await update({pattern: './readme.md'}, old => {
+          return rebundledNote(originalPackageJson) + '\n\n' + old
+        })
+      },
+      bundle: () =>
+        exec(`
+          cp index.d.ts types.txt
+          microbundle --target node --external none
+          mv types.txt index.d.ts
+          # for some reason microbundle outputs the wrong file extension
+          mv dist/main.js dist/main.cjs
+        `),
+      publish: () => exec('npm publish --access=public'),
+    },
+  },
+  {
     package: 'postgrest-js',
     scripts: {
       install: () => exec('npm install'),

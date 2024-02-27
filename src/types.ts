@@ -38,8 +38,5 @@ export type MicrobundlePackageJsonProps = {
   source: string
   typings?: never
 } & {
-  [K in keyof Pick<
-    typefest.PackageJson,
-    'type' | 'main' | 'module' | 'exports' | 'types' | 'unpkg' | 'files'
-  >]-?: typefest.PackageJson[K]
+  [K in 'type' | 'main' | 'module' | 'exports' | 'types' | 'unpkg' | 'files']-?: typefest.PackageJson[K] | undefined
 }
