@@ -33,7 +33,7 @@
     "ts-jest": "29.1.2",
     "ts-node": "10.9.2",
     "type-fest": "4.11.1",
-    "typescript": "5.3.3"
+    "typescript": "5.4.2"
   },
   "dependencies": {
     "postgrest-js": "github:mmkal/postgrest-js#452e0b06a99494becaf30073b01c52db16dfcccb",
