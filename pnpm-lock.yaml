@@ -59,8 +59,8 @@ devDependencies:
     specifier: 10.9.2
     version: 10.9.2(@types/node@20.6.5)(typescript@5.4.2)
   type-fest:
-    specifier: 4.11.1
-    version: 4.11.1
+    specifier: 4.12.0
+    version: 4.12.0
   typescript:
     specifier: 5.4.2
     version: 5.4.2
@@ -7338,7 +7338,7 @@ packages:
     dependencies:
       '@babel/code-frame': 7.22.13
       index-to-position: 0.1.2
-      type-fest: 4.11.1
+      type-fest: 4.12.0
     dev: true
 
   /path-exists@4.0.0:
@@ -7918,7 +7918,7 @@ packages:
     dependencies:
       find-up-simple: 1.0.0
       read-pkg: 9.0.1
-      type-fest: 4.11.1
+      type-fest: 4.12.0
     dev: true
 
   /read-pkg-up@7.0.1:
@@ -7947,7 +7947,7 @@ packages:
       '@types/normalize-package-data': 2.4.4
       normalize-package-data: 6.0.0
       parse-json: 8.1.0
-      type-fest: 4.11.1
+      type-fest: 4.12.0
       unicorn-magic: 0.1.0
     dev: true
 
@@ -8994,8 +8994,8 @@ packages:
     resolution: {integrity: sha512-tLq3bSNx+xSpwvAJnzrK0Ep5CLNWjvFTOp71URMaAEWBfRb9nnJiBoUe0tF8bI4ZFO3omgBR6NvnbzVUT3Ly4g==}
     engines: {node: '>=14.16'}
 
-  /type-fest@4.11.1:
-    resolution: {integrity: sha512-MFMf6VkEVZAETidGGSYW2B1MjXbGX+sWIywn2QPEaJ3j08V+MwVRHMXtf2noB8ENJaD0LIun9wh5Z6OPNf1QzQ==}
+  /type-fest@4.12.0:
+    resolution: {integrity: sha512-5Y2/pp2wtJk8o08G0CMkuFPCO354FGwk/vbidxrdhRGZfd0tFnb4Qb8anp9XxXriwBgVPjdWbKpGl4J9lJY2jQ==}
     engines: {node: '>=16'}
     dev: true
 
