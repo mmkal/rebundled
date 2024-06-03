@@ -17,7 +17,8 @@
     "test",
     "*.js",
     ".*.*js",
-    "*.md"
+    "*.md",
+    "vitest.config.ts"
   ],
   "exclude": ["generated"],
   "ts-node": {
