@@ -3,7 +3,6 @@ import * as fs from 'fs'
 import {glob} from 'glob'
 import * as path from 'path'
 import type * as typefest from 'type-fest'
-import {args} from './args'
 import type {RebundleConfig} from './types'
 import {
   exec,
@@ -15,10 +14,11 @@ import {
   setPackageNameAndVersion,
   getRebundledPackageJson,
 } from './util'
+import { Flags } from './flags'
 
-export const rebundle = async (config: RebundleConfig) => {
+export const rebundle = async (config: RebundleConfig, flags: Flags) => {
   const rebundledPackageJson = getRebundledPackageJson()
-  const parentDir = path.join('/tmp/rebundled', config.package)
+  const parentDir = path.join('/tmp/rebundled', config.package, Date.now().toString())
   const doit = async () => {
     const readPackageJson = (filepath: string) => {
       const packageJsonString = fs.readFileSync(filepath).toString()
@@ -26,10 +26,11 @@ export const rebundle = async (config: RebundleConfig) => {
     }
 
     const nodeModulesPackage = readPackageJson(path.join('node_modules', config.package, 'package.json'))
+    const allDependencies = {...rebundledPackageJson.dependencies, ...rebundledPackageJson.devDependencies}
     const getRepo = config.repo || defaultGetRepo
     const gitRepo = getRepo({
       packageJson: nodeModulesPackage,
-      installedVersion: rebundledPackageJson.dependencies![config.package]!,
+      installedVersion: allDependencies[config.package]!,
     })
 
     fs.mkdirSync(parentDir, {recursive: true})
@@ -67,7 +68,7 @@ export const rebundle = async (config: RebundleConfig) => {
         })
       }
 
-      setPackageNameAndVersion(gitPackage)
+      setPackageNameAndVersion(gitPackage, flags)
 
       await script('modify')
       await script('install')
@@ -81,7 +82,7 @@ export const rebundle = async (config: RebundleConfig) => {
 
       log(`Explore the generated package at ${projectPath}`)
       exec('echo "npm whoami: $(npm whoami)"')
-      if (args['--dry-run']) {
+      if (flags.dryRun) {
         log(`Dry run: skipping publish`, `${gitPackage.name}@${gitPackage.version}`)
       } else {
         await script('publish', `${gitPackage.name}@${gitPackage.version}`)

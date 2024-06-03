@@ -67,17 +67,13 @@ export const configs: RebundleConfig[] = [
       async modify({packageJson, originalPackageJson, update}) {
         preparePackageForMicrobundle(packageJson, {
           source: './index.js',
-          type: undefined,
+          type: 'commonjs',
           main: './dist/main.cjs',
-          module: './dist/main.mjs',
+          module: undefined,
           types: './index.d.ts',
-          unpkg: './dist/main.umd.js',
+          unpkg: undefined,
           files: ['dist', 'index.js', 'index.d.ts'],
-          exports: {
-            require: './dist/main.cjs',
-            import: './dist/main.mjs',
-            types: './index.d.ts',
-          },
+          exports: undefined,
         })
         packageJson.scripts = {} // prevent weird side effects on prepublish etc.
         await update({pattern: './readme.md'}, old => {
@@ -91,6 +87,7 @@ export const configs: RebundleConfig[] = [
           mv types.txt index.d.ts
           # for some reason microbundle outputs the wrong file extension
           mv dist/main.js dist/main.cjs
+          mv dist/main.js.map dist/main.cjs.map
         `),
       publish: () => exec('npm publish --access=public'),
     },

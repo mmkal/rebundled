@@ -1,22 +1,33 @@
-import {rebundle} from './index'
-import {args} from './args'
-import {configs} from './configs'
-import {log, logStorage} from './util'
+import {initTRPC} from '@trpc/server'
+import { Flags } from './flags'
+import { configs } from './configs'
+import { log, logStorage } from './util'
+import { rebundle } from '.'
+import { trpcCli } from 'trpc-cli';
 
-const run = async () => {
-  for (const config of configs) {
-    const included = args['--include'] === '*' || args['--include']?.split(',').includes(config.package)
-    if (!included) {
-      log(`Skipping ${config.package}, not specified via --include`)
-      continue
-    }
+const t = initTRPC.create()
 
-    await logStorage.run([`package ${config.package}:`], async () => {
-      await rebundle(config)
+const router = t.router({
+  rebundle: t.procedure
+    .input(Flags)
+    .mutation(async ({input: flags}) => {
+      for (const config of configs) {
+        const included = flags.include === '*' || flags.include?.split(',').includes(config.package)
+        if (!included) {
+          log(`Skipping ${config.package}, not specified via --include`)
+          continue
+        }
+
+        await logStorage.run([`package ${config.package}:`], async () => {
+          await rebundle(config, flags)
+        })
+      }
     })
-  }
-}
+})
 
-if (require.main === module) {
-  void run()
-}
+const cli = trpcCli({
+  router,
+  default: {procedure: 'rebundle'},
+})
+
+cli.run()

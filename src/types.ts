@@ -2,7 +2,6 @@ import type * as glob from 'glob'
 import type * as typefest from 'type-fest'
 import type {defaultGetRepo} from './util'
 
-type Rebundlable = keyof NonNullable<typefest.PackageJson['dependencies']>
 type ScriptOutput = void | string | Buffer // `execSync` returns string | Buffer
 export type Script = (params: {
   /** frozen version of the upstream package, not modifiable */
@@ -17,7 +16,7 @@ export type Script = (params: {
 }) => typefest.Promisable<ScriptOutput>
 
 export type RebundleConfig = {
-  package: Rebundlable
+  package: string
   /** How to find the git repo for the given package. */
   repo?: typeof defaultGetRepo
   scripts: {

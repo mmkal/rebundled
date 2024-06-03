@@ -6,6 +6,7 @@ import type * as typefest from 'type-fest'
 import type {MicrobundlePackageJsonProps} from './types'
 
 import {getVersion} from './version'
+import { Flags } from './flags'
 
 const execSyncStorage = new AsyncLocalStorage<childProcess.ExecSyncOptions>()
 export const runWithExecOptions = async <T>(options: childProcess.ExecSyncOptions, run: () => Promise<T>) => {
@@ -63,9 +64,9 @@ export const updateFile = (filepath: string, update: (old: string) => string) =>
 export const rebundledNote = (packageJson: typefest.ReadonlyDeep<typefest.PackageJson>) =>
   `⚠️⚠️ **This is a [rebundled](https://github.com/mmkal/rebundled) version of ${packageJson.name}**! ⚠️⚠️`
 
-export const setPackageNameAndVersion = (packageJson: typefest.PackageJson) => {
+export const setPackageNameAndVersion = (packageJson: typefest.PackageJson, flags: Flags) => {
   packageJson.name = `@rebundled/${packageJson.name!.split('/').at(-1)}`
-  packageJson.version = getVersion(packageJson)
+  packageJson.version = getVersion(packageJson, flags)
 }
 
 export const preparePackageForMicrobundle = (
