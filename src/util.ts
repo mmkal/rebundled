@@ -3,10 +3,10 @@ import * as childProcess from 'child_process'
 import * as fs from 'fs'
 import * as path from 'path'
 import type * as typefest from 'type-fest'
+import {Flags} from './flags'
 import type {MicrobundlePackageJsonProps} from './types'
 
 import {getVersion} from './version'
-import { Flags } from './flags'
 
 const execSyncStorage = new AsyncLocalStorage<childProcess.ExecSyncOptions>()
 export const runWithExecOptions = async <T>(options: childProcess.ExecSyncOptions, run: () => Promise<T>) => {

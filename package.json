@@ -6,7 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "rebundle": "npm_config_registry=https://registry.npmjs.org tsx src/run",
-    "eslint": "eslint --ext '.ts,.js,.md'",
+    "eslint": "eslint",
     "lint": "tsc && pnpm eslint src",
     "build": "tsc -p tsconfig.lib.json",
     "test": "jest"
@@ -20,7 +20,7 @@
     "@types/eslint": "8.56.5",
     "@types/semver": "7.5.8",
     "eslint": "8.57.0",
-    "eslint-plugin-mmkal": "0.3.0",
+    "eslint-plugin-mmkal": "0.7.0",
     "glob": "10.3.10",
     "microbundle": "0.15.1",
     "np": "10.0.1",

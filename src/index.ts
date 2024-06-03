@@ -3,6 +3,7 @@ import * as fs from 'fs'
 import {glob} from 'glob'
 import * as path from 'path'
 import type * as typefest from 'type-fest'
+import {Flags} from './flags'
 import type {RebundleConfig} from './types'
 import {
   exec,
@@ -14,7 +15,6 @@ import {
   setPackageNameAndVersion,
   getRebundledPackageJson,
 } from './util'
-import { Flags } from './flags'
 
 export const rebundle = async (config: RebundleConfig, flags: Flags) => {
   const rebundledPackageJson = getRebundledPackageJson()
@@ -76,8 +76,10 @@ export const rebundle = async (config: RebundleConfig, flags: Flags) => {
       fs.writeFileSync(packageJsonPath, JSON.stringify(gitPackage, null, whitespace) + '\n')
       await script('bundle')
 
+      // eslint-disable-next-line no-console
       console.log('Difference vs original package:\n\n')
       exec('git --no-pager diff')
+      // eslint-disable-next-line no-console
       console.log('\n\n')
 
       log(`Explore the generated package at ${projectPath}`)

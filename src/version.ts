@@ -1,7 +1,7 @@
 import * as assert from 'assert'
 import * as semver from 'semver'
 import type * as typefest from 'type-fest'
-import {Flags, } from './flags'
+import {Flags} from './flags'
 import {exec, log} from './util'
 
 export function getVersion(packageJson: typefest.PackageJson, flags: Flags) {
