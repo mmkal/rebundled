@@ -18,8 +18,8 @@ dependencies:
     specifier: github:mmkal/postgrest-js#452e0b06a99494becaf30073b01c52db16dfcccb
     version: github.com/mmkal/postgrest-js/452e0b06a99494becaf30073b01c52db16dfcccb
   trpc-cli:
-    specifier: ^0.3.1
-    version: 0.3.1(@trpc/server@10.45.2)(zod@3.23.8)
+    specifier: ^0.16.0
+    version: 0.16.0(@trpc/server@10.45.2)(zod@3.23.8)
   truncate-json:
     specifier: 1.5.0
     version: 1.5.0
@@ -3550,13 +3550,6 @@ packages:
       escape-string-regexp: 5.0.0
     dev: true
 
-  /cleye@1.3.2:
-    resolution: {integrity: sha512-MngIC2izcCz07iRKr3Pe8Z6ZBv4zbKFl/YnQEN/aMHis6PpH+MxI2e6n0bMUAmSVlMoAyQkdBCSTbfDmtcSovQ==}
-    dependencies:
-      terminal-columns: 1.4.1
-      type-flag: 3.0.0
-    dev: false
-
   /cli-boxes@3.0.0:
     resolution: {integrity: sha512-/lzGpEWL/8PfI0BmBOPRwp0c/wFNX1RdUML3jK/RcSBA9T8mZDdQpqYBKtCFTOfQbwPqWEOpjqW+Fnayc0969g==}
     engines: {node: '>=10'}
@@ -3646,6 +3639,11 @@ packages:
   /colord@2.9.3:
     resolution: {integrity: sha512-jeC1axXpnb0/2nn/Y1LPuLdgXBLH7aDcHu4KEKfqw3CUhX7ZpfBSlPKyqXE6btIgEzfWtrX3/tyBCaCvXvMkOw==}
     dev: true
+
+  /commander@14.0.3:
+    resolution: {integrity: sha512-H+y0Jo/T1RZ9qPP4Eh1pkcQcLRglraJaSLoyOtHxu6AapkjWVCy2Sit1QQ4x3Dng8qDlSsZEet7g5Pq06MvTgw==}
+    engines: {node: '>=20'}
+    dev: false
 
   /commander@2.20.3:
     resolution: {integrity: sha512-GpVkmM8vF2vQUkj2LvZmD35JxeJOLCwJ9cUkugyk2nuhbv3+mJvpLYYt+0+USMxE+oj+ey/lJEnhZw75x/OMcQ==}
@@ -7203,6 +7201,7 @@ packages:
 
   /picocolors@1.0.1:
     resolution: {integrity: sha512-anP1Z8qwhkbmu7MFP5iTt+wQKXgwzf7zTyGlcdzabySa9vd0Xt392U0rVmz9poOaBj0uHJKyyo9/upk0HrEQew==}
+    dev: true
 
   /picomatch@2.3.1:
     resolution: {integrity: sha512-JU3teHTNjmE2VCGFzuY8EXzCDVwEqB2a8fsIvwaStHhAWJEeVd1o1QD80CU6+ZdEXXSLbSsuLwJjkCBWqRQUVA==}
@@ -8592,10 +8591,6 @@ packages:
       unique-string: 3.0.0
     dev: true
 
-  /terminal-columns@1.4.1:
-    resolution: {integrity: sha512-IKVL/itiMy947XWVv4IHV7a0KQXvKjj4ptbi7Ew9MPMcOLzkiQeyx3Gyvh62hKrfJ0RZc4M1nbhzjNM39Kyujw==}
-    dev: false
-
   /terminal-link@3.0.0:
     resolution: {integrity: sha512-flFL3m4wuixmf6IfhFJd1YPiLiMuxEc8uHRM1buzIeZPm22Au2pDqBJQgdo7n1WfPU1ONFGv7YDwpFBmHGF6lg==}
     engines: {node: '>=12'}
@@ -8672,19 +8667,34 @@ packages:
     resolution: {integrity: sha512-N3WMsuqV66lT30CrXNbEjx4GEwlow3v6rr4mCcv6prnfwhS01rkgyFdjPNBYd9br7LpXV1+Emh01fHnq2Gdgrw==}
     dev: false
 
-  /trpc-cli@0.3.1(@trpc/server@10.45.2)(zod@3.23.8):
-    resolution: {integrity: sha512-4nSdrGXeMdxdzqAMocPTenryrzUZgj5pub44mdQGjQ1wGrgFASwo1iW6j0LmXQGCk23JJivx14n5HBaoMuO7tQ==}
+  /trpc-cli@0.16.0(@trpc/server@10.45.2)(zod@3.23.8):
+    resolution: {integrity: sha512-ixB7Qw3IfsWofsUxF2wlxaRhnePplNIlFckcfc4A4ro6WWLEbuJcNKt+J+UptkGKBre8xwG6uKbuO36Vd73I8Q==}
     engines: {node: '>=18'}
+    hasBin: true
     peerDependencies:
-      '@trpc/server': '>=10'
-      zod: '>=3'
+      '@orpc/server': ^1.0.0
+      '@trpc/server': ^10.45.2 || ^11.0.1
+      '@valibot/to-json-schema': ^1.1.0
+      effect: ^3.14.2 || ^4.0.0
+      valibot: ^1.1.0
+      zod: ^3.24.0 || ^4.0.0
+    peerDependenciesMeta:
+      '@orpc/server':
+        optional: true
+      '@trpc/server':
+        optional: true
+      '@valibot/to-json-schema':
+        optional: true
+      effect:
+        optional: true
+      valibot:
+        optional: true
+      zod:
+        optional: true
     dependencies:
       '@trpc/server': 10.45.2
-      cleye: 1.3.2
-      picocolors: 1.0.1
+      commander: 14.0.3
       zod: 3.23.8
-      zod-to-json-schema: 3.23.0(zod@3.23.8)
-      zod-validation-error: 3.3.0(zod@3.23.8)
     dev: false
 
   /truncate-json@1.5.0:
@@ -8802,10 +8812,6 @@ packages:
     resolution: {integrity: sha512-5Y2/pp2wtJk8o08G0CMkuFPCO354FGwk/vbidxrdhRGZfd0tFnb4Qb8anp9XxXriwBgVPjdWbKpGl4J9lJY2jQ==}
     engines: {node: '>=16'}
     dev: true
-
-  /type-flag@3.0.0:
-    resolution: {integrity: sha512-3YaYwMseXCAhBB14RXW5cRQfJQlEknS6i4C8fCfeUdS3ihG9EdccdR9kt3vP73ZdeTGmPb4bZtkDn5XMIn1DLA==}
-    dev: false
 
   /typed-array-buffer@1.0.0:
     resolution: {integrity: sha512-Y8KTSIglk9OZEr8zywiIHG/kmQ7KWyjseXs1CbSo8vC42w7hg2HgYTxSWwP0+is7bWDc1H+Fo026CpHFwm8tkw==}
@@ -9307,23 +9313,6 @@ packages:
     resolution: {integrity: sha512-9bnSc/HEW2uRy67wc+T8UwauLuPJVn28jb+GtJY16iiKWyvmYJRXVT4UamsAEGQfPohgr2q4Tq0sQbQlxTfi1g==}
     engines: {node: '>=12.20'}
     dev: true
-
-  /zod-to-json-schema@3.23.0(zod@3.23.8):
-    resolution: {integrity: sha512-az0uJ243PxsRIa2x1WmNE/pnuA05gUq/JB8Lwe1EDCCL/Fz9MgjYQ0fPlyc2Tcv6aF2ZA7WM5TWaRZVEFaAIag==}
-    peerDependencies:
-      zod: ^3.23.3
-    dependencies:
-      zod: 3.23.8
-    dev: false
-
-  /zod-validation-error@3.3.0(zod@3.23.8):
-    resolution: {integrity: sha512-Syib9oumw1NTqEv4LT0e6U83Td9aVRk9iTXPUQr1otyV1PuXQKOvOwhMNqZIq5hluzHP2pMgnOmHEo7kPdI2mw==}
-    engines: {node: '>=18.0.0'}
-    peerDependencies:
-      zod: ^3.18.0
-    dependencies:
-      zod: 3.23.8
-    dev: false
 
   /zod@3.23.8:
     resolution: {integrity: sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==}
